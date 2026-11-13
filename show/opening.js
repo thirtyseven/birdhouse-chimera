@@ -69,47 +69,51 @@ export function createStage(T, renderer, { createStockHead }) {
   const performer=new T.Group();hall.add(performer);performer.position.set(0,.3,-.35);
   ball(performer,0,.35,0,.5,.65,.24,black);box(performer,.33,.23,.30,black,0,.97,0);
   for(let x of [-.5,.5]){const arm=box(performer,.18,.8,.22,black,x,.2,.05);arm.rotation.z=-x*.28;}
-  const balconyHead=createStockHead();performer.add(balconyHead.group);balconyHead.group.position.y=1.45;balconyHead.group.scale.setScalar(.036);
+  const balconyHead=createStockHead();performer.add(balconyHead.group);balconyHead.group.position.y=1.45;balconyHead.group.scale.setScalar(.045);
   const hair2=hair.clone();balconyHead.group.add(hair2);
   // Final low camera angle: dark trousers, white rubber toes and crossed laces.
   box(feet,20,.15,20,mat(0x62616b),0,-.1,-3);
+  box(feet,2.5,3.5,.05,new T.MeshBasicMaterial({color:0x80969f}),0,1.7,-6);
+  for(let j=-3;j<=3;j++){const line=box(feet,12,.008,.08,mat(0xc1bdb1),0,-.018,-j*1.3);line.rotation.y=.48;}
   const shoePairs=[];
   for(let row=0;row<4;row++)for(let side of [-1,1]) {
     const leg=new T.Group();feet.add(leg);leg.position.set(side*.24+(row%2)*.25,0,-row*1.1);shoePairs.push(leg);
     mesh(leg,new T.CylinderGeometry(.13,.16,1.8,12),mat(0x0c1422),0,1.25,0);
-    const shoe=ball(leg,0,.19,.12,.19,.16,.40,mat(0x15191e));
-    ball(leg,0,.16,.40,.18,.12,.16,mat(0xd1d0c9));box(leg,.37,.065,.72,mat(0xc6c4bd),0,.075,.12);
-    for(let i=0;i<5;i++){let z=.05+i*.05; tube(leg,[[-.12,.33,z],[.12,.33,z+.055]],.012,mat(0xd6d4c9));tube(leg,[[.12,.334,z],[-.12,.334,z+.055]],.012,mat(0xd6d4c9));}
+    const shoe=ball(leg,0,.19,.12,.19,.16,.40,mat(0x15191e));ball(leg,0,.40,-.025,.145,.24,.16,mat(0x101419));box(leg,.23,.29,.05,mat(0x20252b),0,.43,.12);
+    ball(leg,0,.16,.43,.17,.085,.11,mat(0xd1d0c9));box(leg,.37,.065,.72,mat(0xc6c4bd),0,.075,.12);
+    for(let i=0;i<7;i++){const z=.13+i*.032,y=.60-i*.041;tube(leg,[[-.105,y,z],[.105,y-.041,z+.032]],.008,mat(0xd6d4c9));tube(leg,[[.105,y,z],[-.105,y-.041,z+.032]],.008,mat(0xd6d4c9));for(const side of [-1,1])ball(leg,side*.115,y,z,.015,.015,.009,mat(0xb6b7ae));}
+
   }
   const smooth=(a,b,t)=>{let x=T.MathUtils.clamp((t-a)/(b-a),0,1);return x*x*(3-2*x);};
   // Approximate articulatory beats for the intro; no facial replacement or video sampling.
   const syllables=[.83,1.02,1.27,1.52,1.87,2.65,2.9,3.12,3.4,3.62,4.02,4.65,4.86,5.1,5.35,5.62,5.89,6.13,6.48,7.02,7.3,7.55,7.8,8.03,8.25,8.46,8.68,8.92,9.14,9.55,10.2,10.55,10.95];
   const mouth=t=>Math.max(.015,...syllables.map(s=>.75*Math.exp(-(((t-s)/.12)**2))));
-  function render(t) {
+  function render(t,wideShoes=false) {
     t=T.MathUtils.clamp(t,0,20);
     const shot=t<11.18?0:t<15.683?1:t<19.269?2:3;
     roots.forEach((g,i)=>g.visible=i===shot);
-    camera.fov=40;
+    camera.fov=40;key.color.setHex(shot===3?0xe8e6e2:0xffc394);
     if(shot===0){
       camera.position.set(0,0,4);camera.lookAt(0,0,0);
       stock.group.visible=t>.55;stock.group.position.set(.025*Math.sin(t*1.1),-.025*Math.sin(t*1.9),0);
       stock.group.rotation.y=-Math.PI/2+.15*Math.sin(t*1.8);stock.update(t,mouth(t));
       const fade=smooth(.55,1.2,t)*(1-smooth(10.8,11.18,t));
       renderer.setClearColor(0x000201);
-      stock.group.scale.setScalar(.028*fade);
+      stock.group.scale.setScalar(.037*fade);
       bulbs.forEach(([b,h],i)=>{const v=smooth(6.1,8.4,t)*(1-smooth(10.9,11.18,t))*(.8+.2*Math.sin(i*1.9+t*2));b.material.opacity=v;h.material.opacity=v*.16;});
     } else if(shot===1){
       camera.position.set(0,-.2,3.2);camera.lookAt(0,-.2,0);
       filament.scale.setScalar(.65+smooth(11.18,15.683,t)*.6);
       filament.rotation.z=.025*Math.sin(t*2);filament.rotation.y=(t-11.18)*.16;
-      const v=smooth(11.18,12,t);hot.color.setRGB(v*1.8,v*.9,v*.26);glass.material.opacity=.015+.12*smooth(13,15.6,t);
+      const v=smooth(11.18,12,t);hot.color.setRGB(v*1.25,v*.55,v*.13);glass.material.opacity=.015+.12*smooth(13,15.6,t);
     } else if(shot===2){
-      camera.fov=56;camera.position.set(.13*Math.sin(t*2),-1.65,3.1);camera.lookAt(0,1.35,-1);
+      camera.fov=52;camera.position.set(.10*Math.sin(t*2),-.8,2.8);camera.lookAt(0,1.12,-.5);
       balconyHead.update(t,.3+.25*Math.sin(t*12));balconyHead.group.rotation.y=-Math.PI/2+.25*Math.sin(t*2);
       performer.rotation.y=.06*Math.sin(t*3);hall.rotation.z=.012*Math.sin(t*1.2);
     } else {
-      camera.fov=49;camera.position.set(.5,.35,1.4);camera.lookAt(0,.20,-.7);
-      shoePairs.forEach((g,i)=>{g.position.y=Math.max(0,Math.sin((t-19.269)*10+i*.8))*.09;});
+      camera.fov=49;camera.position.set(.45,.54,1.55);camera.lookAt(0,.28,-.65);
+      if(wideShoes){camera.position.set(0,.32,1.5);camera.lookAt(0,.25,-3);camera.fov=56;}
+      shoePairs.forEach((g,i)=>{const row=Math.floor(i/2),side=i%2?1:-1;g.position.x=wideShoes?side*1.15:side*.24+(row%2)*.25;g.position.y=Math.max(0,Math.sin((t-19.269)*10+i*.8))*.09;});
     }
     camera.updateProjectionMatrix(); renderer.render(scene,camera);
   }

@@ -1,0 +1,659 @@
+{
+  "duration": 184,
+  "anchors": [
+    [
+      0,
+      0
+    ],
+    [
+      0.7,
+      0.3
+    ],
+    [
+      15.683,
+      14.3000105
+    ],
+    [
+      34.618,
+      32.5860242145
+    ],
+    [
+      60.143,
+      56.58604221449999
+    ],
+    [
+      98.057,
+      92.87106942825001
+    ],
+    [
+      108.025,
+      102.30007649999999
+    ],
+    [
+      133.383,
+      126.30009449999999
+    ],
+    [
+      148.649,
+      140.72910532175
+    ],
+    [
+      163.747,
+      154.44311560725
+    ],
+    [
+      177.636,
+      168.15712589275003
+    ],
+    [
+      191.066,
+      180.47655847500005
+    ],
+    [
+      196.181,
+      184
+    ]
+  ],
+  "shots": [
+    {
+      "id": 0,
+      "sourceStart": 0,
+      "sourceEnd": 11.18,
+      "start": 0.0,
+      "end": 10.092407344299998,
+      "kind": "intro"
+    },
+    {
+      "id": 1,
+      "sourceStart": 11.18,
+      "sourceEnd": 15.683,
+      "start": 10.092407344299998,
+      "end": 14.3000105,
+      "kind": "filament"
+    },
+    {
+      "id": 2,
+      "sourceStart": 15.683,
+      "sourceEnd": 19.269,
+      "start": 14.3000105,
+      "end": 17.763113097325,
+      "kind": "balcony"
+    },
+    {
+      "id": 3,
+      "sourceStart": 19.269,
+      "sourceEnd": 20.521,
+      "start": 17.763113097325,
+      "end": 18.97221400415,
+      "kind": "shoes"
+    },
+    {
+      "id": 4,
+      "sourceStart": 20.521,
+      "sourceEnd": 23.023,
+      "start": 18.97221400415,
+      "end": 21.388415816300004,
+      "kind": "balcony_close"
+    },
+    {
+      "id": 5,
+      "sourceStart": 23.023,
+      "sourceEnd": 27.736,
+      "start": 21.388415816300004,
+      "end": 25.939919229925007,
+      "kind": "city"
+    },
+    {
+      "id": 6,
+      "sourceStart": 27.736,
+      "sourceEnd": 30.03,
+      "start": 25.939919229925007,
+      "end": 28.155320891475004,
+      "kind": "guitar_balcony"
+    },
+    {
+      "id": 7,
+      "sourceStart": 30.03,
+      "sourceEnd": 34.618,
+      "start": 28.155320891475004,
+      "end": 32.5860242145,
+      "kind": "room_wide"
+    },
+    {
+      "id": 8,
+      "sourceStart": 34.618,
+      "sourceEnd": 36.703,
+      "start": 32.5860242145,
+      "end": 34.5464256848,
+      "kind": "torch_face"
+    },
+    {
+      "id": 9,
+      "sourceStart": 36.703,
+      "sourceEnd": 37.454,
+      "start": 34.5464256848,
+      "end": 35.252626214450004,
+      "kind": "room_guitar"
+    },
+    {
+      "id": 10,
+      "sourceStart": 37.454,
+      "sourceEnd": 38.997,
+      "start": 35.252626214450004,
+      "end": 36.703427302550004,
+      "kind": "mirror_red"
+    },
+    {
+      "id": 11,
+      "sourceStart": 38.997,
+      "sourceEnd": 39.957,
+      "start": 36.703427302550004,
+      "end": 37.6060279795,
+      "kind": "helmet"
+    },
+    {
+      "id": 12,
+      "sourceStart": 39.957,
+      "sourceEnd": 43.794,
+      "start": 37.6060279795,
+      "end": 41.213830685350004,
+      "kind": "mirror"
+    },
+    {
+      "id": 13,
+      "sourceStart": 43.794,
+      "sourceEnd": 44.67,
+      "start": 41.213830685350004,
+      "end": 42.037431303050006,
+      "kind": "helmet_close"
+    },
+    {
+      "id": 14,
+      "sourceStart": 44.67,
+      "sourceEnd": 46.255,
+      "start": 42.037431303050006,
+      "end": 43.52773242077502,
+      "kind": "mirror"
+    },
+    {
+      "id": 15,
+      "sourceStart": 46.255,
+      "sourceEnd": 47.214,
+      "start": 43.52773242077502,
+      "end": 44.42943309705,
+      "kind": "tools"
+    },
+    {
+      "id": 16,
+      "sourceStart": 47.214,
+      "sourceEnd": 48.507,
+      "start": 44.42943309705,
+      "end": 45.645234008900005,
+      "kind": "mirror_stripe"
+    },
+    {
+      "id": 17,
+      "sourceStart": 48.507,
+      "sourceEnd": 49.508,
+      "start": 45.645234008900005,
+      "end": 46.5864347148,
+      "kind": "weld_close"
+    },
+    {
+      "id": 18,
+      "sourceStart": 49.508,
+      "sourceEnd": 51.051,
+      "start": 46.5864347148,
+      "end": 48.03723580290001,
+      "kind": "mirror"
+    },
+    {
+      "id": 19,
+      "sourceStart": 51.051,
+      "sourceEnd": 51.301,
+      "start": 48.03723580290001,
+      "end": 48.27233597922501,
+      "kind": "mirror_dark"
+    },
+    {
+      "id": 20,
+      "sourceStart": 51.301,
+      "sourceEnd": 53.845,
+      "start": 48.27233597922501,
+      "end": 50.664337773225,
+      "kind": "torch_tools"
+    },
+    {
+      "id": 21,
+      "sourceStart": 53.845,
+      "sourceEnd": 60.143,
+      "start": 50.664337773225,
+      "end": 56.58604221449999,
+      "kind": "hall_wide"
+    },
+    {
+      "id": 22,
+      "sourceStart": 60.143,
+      "sourceEnd": 61.603,
+      "start": 56.58604221449999,
+      "end": 57.98334326247501,
+      "kind": "mirror_guitar"
+    },
+    {
+      "id": 23,
+      "sourceStart": 61.603,
+      "sourceEnd": 64.731,
+      "start": 57.98334326247501,
+      "end": 60.976945507675,
+      "kind": "hall_wide"
+    },
+    {
+      "id": 24,
+      "sourceStart": 64.731,
+      "sourceEnd": 67.067,
+      "start": 60.976945507675,
+      "end": 63.212547184375005,
+      "kind": "bicycles"
+    },
+    {
+      "id": 25,
+      "sourceStart": 67.067,
+      "sourceEnd": 69.236,
+      "start": 63.212547184375005,
+      "end": 65.28834874122501,
+      "kind": "city"
+    },
+    {
+      "id": 26,
+      "sourceStart": 69.236,
+      "sourceEnd": 71.864,
+      "start": 65.28834874122501,
+      "end": 67.80345062754999,
+      "kind": "hall_guitar"
+    },
+    {
+      "id": 27,
+      "sourceStart": 71.864,
+      "sourceEnd": 72.99,
+      "start": 67.80345062754999,
+      "end": 68.88105143575,
+      "kind": "city"
+    },
+    {
+      "id": 28,
+      "sourceStart": 72.99,
+      "sourceEnd": 73.782,
+      "start": 68.88105143575,
+      "end": 69.63905200425,
+      "kind": "mirror_guitar"
+    },
+    {
+      "id": 29,
+      "sourceStart": 73.782,
+      "sourceEnd": 74.158,
+      "start": 69.63905200425,
+      "end": 69.99885227410002,
+      "kind": "mirror_dark"
+    },
+    {
+      "id": 30,
+      "sourceStart": 74.158,
+      "sourceEnd": 79.163,
+      "start": 69.99885227410002,
+      "end": 74.7888558666,
+      "kind": "bulbs"
+    },
+    {
+      "id": 31,
+      "sourceStart": 79.163,
+      "sourceEnd": 83.0,
+      "start": 74.7888558666,
+      "end": 78.460958620675,
+      "kind": "helmet_arms"
+    },
+    {
+      "id": 32,
+      "sourceStart": 83.0,
+      "sourceEnd": 84.585,
+      "start": 78.460958620675,
+      "end": 79.97785975835002,
+      "kind": "crowd_close"
+    },
+    {
+      "id": 33,
+      "sourceStart": 84.585,
+      "sourceEnd": 85.335,
+      "start": 79.97785975835002,
+      "end": 80.6956602967,
+      "kind": "helmet_arms"
+    },
+    {
+      "id": 34,
+      "sourceStart": 85.335,
+      "sourceEnd": 87.212,
+      "start": 80.6956602967,
+      "end": 82.492061644,
+      "kind": "crowd_close"
+    },
+    {
+      "id": 35,
+      "sourceStart": 87.212,
+      "sourceEnd": 88.88,
+      "start": 82.492061644,
+      "end": 84.08836284122502,
+      "kind": "helmet_arms"
+    },
+    {
+      "id": 36,
+      "sourceStart": 88.88,
+      "sourceEnd": 92.509,
+      "start": 84.08836284122502,
+      "end": 87.56146544605002,
+      "kind": "tuba"
+    },
+    {
+      "id": 37,
+      "sourceStart": 92.509,
+      "sourceEnd": 93.718,
+      "start": 87.56146544605002,
+      "end": 88.71846631380001,
+      "kind": "trumpet"
+    },
+    {
+      "id": 38,
+      "sourceStart": 93.718,
+      "sourceEnd": 98.057,
+      "start": 88.71846631380001,
+      "end": 92.87106942825001,
+      "kind": "tuba"
+    },
+    {
+      "id": 39,
+      "sourceStart": 98.057,
+      "sourceEnd": 108.025,
+      "start": 92.87106942825001,
+      "end": 102.30007649999999,
+      "kind": "bridge"
+    },
+    {
+      "id": 40,
+      "sourceStart": 108.025,
+      "sourceEnd": 112.363,
+      "start": 102.30007649999999,
+      "end": 106.40577957927499,
+      "kind": "shoes"
+    },
+    {
+      "id": 41,
+      "sourceStart": 112.363,
+      "sourceEnd": 117.701,
+      "start": 106.40577957927499,
+      "end": 111.45788336835001,
+      "kind": "crowd"
+    },
+    {
+      "id": 42,
+      "sourceStart": 117.701,
+      "sourceEnd": 127.461,
+      "start": 111.45788336835001,
+      "end": 120.695190296325,
+      "kind": "chair"
+    },
+    {
+      "id": 43,
+      "sourceStart": 127.461,
+      "sourceEnd": 133.383,
+      "start": 120.695190296325,
+      "end": 126.30009449999999,
+      "kind": "hall_wide"
+    },
+    {
+      "id": 44,
+      "sourceStart": 133.383,
+      "sourceEnd": 137.137,
+      "start": 126.30009449999999,
+      "end": 129.84829716115,
+      "kind": "eyes"
+    },
+    {
+      "id": 45,
+      "sourceStart": 137.137,
+      "sourceEnd": 140.432,
+      "start": 129.84829716115,
+      "end": 132.96259949687501,
+      "kind": "hall_wide"
+    },
+    {
+      "id": 46,
+      "sourceStart": 140.432,
+      "sourceEnd": 142.392,
+      "start": 132.96259949687501,
+      "end": 134.81520088632502,
+      "kind": "mountains"
+    },
+    {
+      "id": 47,
+      "sourceStart": 142.392,
+      "sourceEnd": 143.518,
+      "start": 134.81520088632502,
+      "end": 135.879401684475,
+      "kind": "pipe"
+    },
+    {
+      "id": 48,
+      "sourceStart": 143.518,
+      "sourceEnd": 144.061,
+      "start": 135.879401684475,
+      "end": 136.39260206937502,
+      "kind": "mountains"
+    },
+    {
+      "id": 49,
+      "sourceStart": 144.061,
+      "sourceEnd": 145.187,
+      "start": 136.39260206937502,
+      "end": 137.45690286759998,
+      "kind": "mountains_close"
+    },
+    {
+      "id": 50,
+      "sourceStart": 145.187,
+      "sourceEnd": 145.437,
+      "start": 137.45690286759998,
+      "end": 137.693203044825,
+      "kind": "mountains_empty"
+    },
+    {
+      "id": 51,
+      "sourceStart": 145.437,
+      "sourceEnd": 148.649,
+      "start": 137.693203044825,
+      "end": 140.72910532175,
+      "kind": "signs"
+    },
+    {
+      "id": 52,
+      "sourceStart": 148.649,
+      "sourceEnd": 151.318,
+      "start": 140.72910532175,
+      "end": 143.153407139975,
+      "kind": "mirror"
+    },
+    {
+      "id": 53,
+      "sourceStart": 151.318,
+      "sourceEnd": 151.693,
+      "start": 143.153407139975,
+      "end": 143.4941073955,
+      "kind": "mirror"
+    },
+    {
+      "id": 54,
+      "sourceStart": 151.693,
+      "sourceEnd": 152.069,
+      "start": 143.4941073955,
+      "end": 143.835607651625,
+      "kind": "mirror_dark"
+    },
+    {
+      "id": 55,
+      "sourceStart": 152.069,
+      "sourceEnd": 152.444,
+      "start": 143.835607651625,
+      "end": 144.176207907075,
+      "kind": "mirror_dark"
+    },
+    {
+      "id": 56,
+      "sourceStart": 152.444,
+      "sourceEnd": 152.819,
+      "start": 144.176207907075,
+      "end": 144.516808162525,
+      "kind": "mirror_dark"
+    },
+    {
+      "id": 57,
+      "sourceStart": 152.819,
+      "sourceEnd": 153.946,
+      "start": 144.516808162525,
+      "end": 145.54050893030004,
+      "kind": "mirror_dark"
+    },
+    {
+      "id": 58,
+      "sourceStart": 153.946,
+      "sourceEnd": 154.279,
+      "start": 145.54050893030004,
+      "end": 145.84300915717503,
+      "kind": "mirror_dark"
+    },
+    {
+      "id": 59,
+      "sourceStart": 154.279,
+      "sourceEnd": 154.78,
+      "start": 145.84300915717503,
+      "end": 146.29810949850003,
+      "kind": "bulb_macro"
+    },
+    {
+      "id": 60,
+      "sourceStart": 154.78,
+      "sourceEnd": 159.618,
+      "start": 146.29810949850003,
+      "end": 150.692612794375,
+      "kind": "crowd"
+    },
+    {
+      "id": 61,
+      "sourceStart": 159.618,
+      "sourceEnd": 159.952,
+      "start": 150.692612794375,
+      "end": 150.99601302192502,
+      "kind": "mirror_flans_dark"
+    },
+    {
+      "id": 62,
+      "sourceStart": 159.952,
+      "sourceEnd": 160.953,
+      "start": 150.99601302192502,
+      "end": 151.905213703825,
+      "kind": "mirror_flans_dark"
+    },
+    {
+      "id": 63,
+      "sourceStart": 160.953,
+      "sourceEnd": 161.328,
+      "start": 151.905213703825,
+      "end": 152.24581395927498,
+      "kind": "mirror_flans"
+    },
+    {
+      "id": 64,
+      "sourceStart": 161.328,
+      "sourceEnd": 161.578,
+      "start": 152.24581395927498,
+      "end": 152.47291412960004,
+      "kind": "mirror_flans_dark"
+    },
+    {
+      "id": 65,
+      "sourceStart": 161.578,
+      "sourceEnd": 162.079,
+      "start": 152.47291412960004,
+      "end": 152.92801447092498,
+      "kind": "mirror_flans_dark"
+    },
+    {
+      "id": 66,
+      "sourceStart": 162.079,
+      "sourceEnd": 163.747,
+      "start": 152.92801447092498,
+      "end": 154.44311560725,
+      "kind": "hands"
+    },
+    {
+      "id": 67,
+      "sourceStart": 163.747,
+      "sourceEnd": 169.419,
+      "start": 154.44311560725,
+      "end": 160.043619807625,
+      "kind": "balcony_upper"
+    },
+    {
+      "id": 68,
+      "sourceStart": 169.419,
+      "sourceEnd": 172.506,
+      "start": 160.043619807625,
+      "end": 163.0917220937,
+      "kind": "desert"
+    },
+    {
+      "id": 69,
+      "sourceStart": 172.506,
+      "sourceEnd": 174.174,
+      "start": 163.0917220937,
+      "end": 164.73872332895,
+      "kind": "balcony_close"
+    },
+    {
+      "id": 70,
+      "sourceStart": 174.174,
+      "sourceEnd": 177.636,
+      "start": 164.73872332895,
+      "end": 168.15712589275003,
+      "kind": "guitar_crowd"
+    },
+    {
+      "id": 71,
+      "sourceStart": 177.636,
+      "sourceEnd": 183.725,
+      "start": 168.15712589275003,
+      "end": 173.68533003890002,
+      "kind": "room_platform"
+    },
+    {
+      "id": 72,
+      "sourceStart": 183.725,
+      "sourceEnd": 188.438,
+      "start": 173.68533003890002,
+      "end": 177.964233248075,
+      "kind": "room_duo"
+    },
+    {
+      "id": 73,
+      "sourceStart": 188.438,
+      "sourceEnd": 191.066,
+      "start": 177.964233248075,
+      "end": 180.47655847500005,
+      "kind": "room_duo_wide"
+    },
+    {
+      "id": 74,
+      "sourceStart": 191.066,
+      "sourceEnd": 196.181,
+      "start": 180.47655847500005,
+      "end": 184,
+      "kind": "filament"
+    }
+  ]
+}
