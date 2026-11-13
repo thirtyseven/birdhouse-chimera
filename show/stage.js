@@ -748,18 +748,59 @@ export async function createStage(T, renderer, api) {
     for(let i=-7;i<=7;i++){const x=i*.7;cylinder(rail,.11,.14,1.1,stone,x,.55,0);ball(rail,x,.27,0,.2,.2,.2,stone);box(rail,.42,.12,.4,edge,x,1.1,0);}
     box(rail,11,.18,.55,edge,0,1.24,0);return rail;}
   const hall=root('hall');
-  for(let x=-10;x<=10;x++)for(let z=-12;z<=7;z++)box(hall,1,.08,1,((x+z)&1)?M(0x30343a):M(0x8b867b),x,-.1,z);
+  for(let x=-10;x<=10;x++)for(let z=-12;z<=7;z++)box(hall,1,.08,1,((x+z)&1)?M(0x77736e):M(0x8b867b),x,-.1,z);
   box(hall,23,11,.5,stone,0,5,-12);box(hall,.5,11,25,stone,-11,5,-1);box(hall,.5,11,25,stone,11,5,-1);
   for(const x of [-8,-4,4,8]) {cylinder(hall,.46,.55,8,stone,x,4,-8);box(hall,1.4,.4,1.4,edge,x,7.7,-8);box(hall,1.2,.3,1.2,edge,x,.15,-8);}
   for(let side of [-1,1])for(let j=0;j<18;j++){box(hall,3,.2+j*.2,.55,stone,side*6,.1+j*.1,-4-j*.5);box(hall,.12,.9,.12,edge,side*4.55,.8+j*.2,-4-j*.5);}
   balcony(hall,3.6,-10);
   for(let x of [-8,-4,0,4,8]){const arc=[];for(let i=0;i<=40;i++){let a=i/40*Math.PI;arc.push([x+Math.cos(a)*1.8,5+Math.sin(a)*2,-11.65]);}tube(hall,arc,.16,edge);box(hall,2.8,3,.04,M(0x16202a),x,3.5,-11.7);}
   for(let x of [-9,9])for(let z of [-7,-1,5]){cylinder(hall,.08,.12,3.1,gold,x,1.55,z);for(let k=-1;k<=1;k++)ball(hall,x+k*.25,3.15-Math.abs(k)*.12,z,.18,.24,.18,B(0xe5c28e));}
-  chair(hall,-3,1,.3);chair(hall,3,-2,-.35);chair(hall,-5,-4,.3);
-  lamp(hall,-4,0,1,2.2);lamp(hall,2,0,-1,2.2);plant(hall,-7,-1);plant(hall,6,-5);
+  const hallFurniture=new T.Group();hall.add(hallFurniture);
+  chair(hallFurniture,-3,1,.3);chair(hallFurniture,3,-2,-.35);chair(hallFurniture,-5,-4,.3);
+  lamp(hallFurniture,-4,0,1,2.2);lamp(hallFurniture,2,0,-1,2.2);plant(hallFurniture,-7,-1);plant(hallFurniture,6,-5);
   for(let i=0;i<14;i++){const a=dancer(i);hall.add(a.g);a.g.position.set((i%5-2)*1.45,0,-2-Math.floor(i/5)*2);a.home=a.g.position.clone();}
+  // Cyclists follow a shared continuous clock across the hall's intercut shots.
+  const cycleSalon=new T.Group();hall.add(cycleSalon);
+  box(cycleSalon,6.3,.025,5.3,M(0x675747),0,-.045,-.7);
+  for(let x of [-3.02,3.02])box(cycleSalon,.07,.03,5.1,M(0xaa8870),x,-.025,-.7);
+  const cycleChair=chair(cycleSalon,.65,-.1,-.12);
+  chair(cycleSalon,-2.15,-.9,.75);
+  for(const [x,z] of [[-2.5,.7],[2,-1.5]]){box(cycleSalon,.7,.75,.65,wood,x,.38,z);lamp(cycleSalon,x,.77,z,1.2);}
+  for(const x of [-2.8,2.8]){box(cycleSalon,.12,1.25,2.1,M(0x423b32),x,.63,-1.95);plant(cycleSalon,x,-2.8);}
+  box(cycleSalon,1.6,1.45,.22,wood,0,.73,-2.9);
+  for(let j=0;j<6;j++)box(cycleSalon,.16,.75,.04,M([0x786345,0x4f3832,0x3e4950][j%3]),-.6+j*.23,1.04,-2.76);
+  const seatedLegs=new T.Group();singer.g.add(seatedLegs);
   const bicycles=[];
-  for(let i=0;i<4;i++){const b=new T.Group();hall.add(b);b.position.set(-5+i*3,0,-3);for(let x of [-.6,.6])torus(b,.5,.025,B(0x555b5a),x,.55,0);tube(b,[[-.6,.55,0],[-.2,1.2,0],[.3,.55,0],[-.6,.55,0],[.3,1.2,0],[.6,.55,0]],.025,M(0x7a7f7b));tube(b,[[.3,1.2,0],[.28,1.5,0],[.55,1.55,0]],.025,edge);bicycles.push(b);}
+  function rod(g,a,b,r,m){const v=new T.Vector3(...a),w=new T.Vector3(...b),d=w.clone().sub(v);const o=mesh(g,new T.CylinderGeometry(r,r,d.length(),8),m);o.position.copy(v).add(w).multiplyScalar(.5);o.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),d.normalize());return o;}
+  for(const x of [-.18,.18]){rod(seatedLegs,[x,.91,0],[x,.72,.58],.12,dark);rod(seatedLegs,[x,.72,.58],[x,.32,.61],.10,dark);ball(seatedLegs,x,.28,.73,.14,.09,.24,black);}
+  for(let i=0;i<8;i++){
+    const g=new T.Group();hall.add(g);
+    const steel=M(i%3===0?0x777c79:0x303b3b,.28),tire=M(0x131719),chrome=M(0xaaa79a,.24);
+    const wheels=[];
+    for(const x of [-.82,.82]){const wheel=new T.Group();g.add(wheel);wheel.position.set(x,.56,0);torus(wheel,.53,.035,tire);torus(wheel,.485,.012,chrome);
+      for(let j=0;j<16;j++){const a=j*Math.PI/8;rod(wheel,[0,0,0],[Math.cos(a)*.48,Math.sin(a)*.48,0],.005,chrome);}wheels.push(wheel);}
+    const rear=[-.82,.56,0],crank=[-.12,.48,0],seat=[-.3,1.18,0],fork=[.57,1.18,0],front=[.82,.56,0];
+    for(const [a,b] of [[rear,crank],[crank,seat],[seat,rear],[seat,fork],[fork,crank],[fork,front]])rod(g,a,b,.025,steel);
+    rod(g,seat,[-.32,1.32,0],.028,chrome);ball(g,-.36,1.33,0,.21,.055,.12,black);
+    rod(g,fork,[.54,1.49,0],.025,chrome);rod(g,[.54,1.49,-.36],[.54,1.49,.36],.023,chrome);
+    for(const z of [-.36,.36])rod(g,[.54,1.49,z],[.73,1.40,z],.025,black);
+    const rider=new T.Group();g.add(rider);
+    const plaid=M([0x843b2e,0x773c30,0x924c35,0x6b3430][i%4]);
+    const shirt=box(rider,.46,.63,.65,plaid,-.04,1.72,0);shirt.rotation.z=-.22;
+    for(const x of [-.235,.235]){for(let j=-2;j<=2;j++){box(shirt,.008,.018,.65,white,x,j*.12,0);box(shirt,.008,.63,.014,white,x,0,j*.12);}}
+    for(const z of [-.33,.33]){for(let j=-2;j<=2;j++){box(shirt,.46,.018,.008,white,0,j*.12,z);box(shirt,.014,.63,.008,white,j*.09,0,z);}}
+    const head=proto.group.clone(true);rider.add(head);head.position.set(.12,2.14,0);head.rotation.y=0;head.scale.setScalar(.029);
+    for(const z of [-.29,.29]){rod(rider,[.06,1.94,z],[.32,1.62,z],.085,plaid);rod(rider,[.32,1.62,z],[.68,1.41,z],.065,skin);ball(rider,.68,1.41,z,.09,.07,.07,skin);}
+    const moving=new T.Group();g.add(moving);const legMat=M(0x182b42);
+    const legs=[];for(const side of [-1,1]){const upper=mesh(moving,new T.CylinderGeometry(.105,.09,1,8),legMat),lower=mesh(moving,new T.CylinderGeometry(.085,.065,1,8),legMat);const shoe=ball(moving,0,0,0,.19,.075,.09,black);const pedal=box(moving,.19,.035,.14,chrome);legs.push({side,upper,lower,shoe,pedal});}
+    const shadow=mesh(g,new T.CircleGeometry(1,32),new T.MeshBasicMaterial({color:0x070706,transparent:true,opacity:.20,depthWrite:false}),0,-.045,0);shadow.rotation.x=-Math.PI/2;shadow.scale.set(1.45,.45,1);
+    function segment(o,a,b){const v=new T.Vector3(...a),w=new T.Vector3(...b),d=w.clone().sub(v);o.position.copy(v).add(w).multiplyScalar(.5);o.scale.y=d.length();o.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),d.normalize());}
+    bicycles.push({g,animate(t){const phase=(t-50.66)*.32+i*Math.PI/4;const rx=5.1+(i%2)*.3,rz=4.25+(i%2)*.2;
+      g.position.set(rx*Math.cos(phase),0,-.7+rz*Math.sin(phase));g.rotation.y=Math.atan2(-rz*Math.cos(phase),-rx*Math.sin(phase));
+      wheels.forEach(w=>w.rotation.z=-t*3.05);const spin=t*3.05+i;
+      legs.forEach(({side,upper,lower,shoe,pedal})=>{const a=spin+(side>0?Math.PI:0),foot=[-.12+.20*Math.cos(a),.48+.20*Math.sin(a),side*.19],knee=[.30+.09*Math.cos(a),.94+.09*Math.sin(a),side*.22];segment(upper,[-.31,1.29,side*.21],knee);segment(lower,knee,foot);shoe.position.set(foot[0]+.06,foot[1]+.055,foot[2]);pedal.position.set(...foot);});
+    }});
+  }
   const eyeBoards=[],signBoards=[];
   crowd.forEach((a,i)=>{if(i<7){const board=new T.Group();a.g.add(board);board.position.set(0,.95,.5);box(board,.9,1.2,.07,black);const eye=new T.Group();board.add(eye);eye.position.z=.06;eyes(eye,.78,.8);eyeBoards.push(board);
     const sign=new T.Group();a.g.add(sign);sign.position.set(0,1.05,.51);box(sign,.95,1.3,.08,wood);plaque(sign,'STOP\nROCK\nVIDEO',.86,1.18,0,0,.05);signBoards.push(sign);}});
@@ -811,7 +852,7 @@ export async function createStage(T, renderer, api) {
     if(s.id<4||k==='shoes'||k==='filament') {opening.render(k==='shoes'?19.269+u*.70:k==='filament'?(s.id===74?15.55-u*4.3:11.18+u*4.4):ref);finish(t);return;}
     singer.g.removeFromParent();guitarist.g.removeFromParent();singer.g.visible=true;guitarist.g.visible=true;
     singer.head.visible=true;guitarist.head.visible=true;for(const a of [singer,guitarist])a.head.traverse(o=>{if(o.isLineSegments2)o.visible=true;});instrument.visible=false;helmet.visible=false;toolRig.visible=false;torch.visible=false;funnel.visible=false;
-    eyeBoards.forEach(o=>o.visible=k==='eyes');signBoards.forEach(o=>o.visible=k==='signs');bicycles.forEach(o=>o.visible=k==='bicycles');
+    eyeBoards.forEach(o=>o.visible=k==='eyes');signBoards.forEach(o=>o.visible=k==='signs');const cycling=[21,23,24,26].includes(s.id);cycleSalon.visible=cycling;hallFurniture.visible=!cycling;bicycles.forEach(b=>{b.g.visible=cycling;if(cycling)b.animate(t);});
     crowd.forEach((a,i)=>{a.g.visible=true;a.g.position.copy(a.home);a.pose(t+i*.07,k==='crowd'||k==='crowd_close'?'hands':'dance');a.g.position.x=a.home.x+.12*Math.sin(t*2+i);});
     ambient.intensity=1.7;key.intensity=160;fill.intensity=85;rim.intensity=95;key.color.setHex(0xffd9af);scene.background.setHex(0x020304);
     const pulse=Math.sin(t*105/60*Math.PI*2);
@@ -849,8 +890,15 @@ export async function createStage(T, renderer, api) {
     }else{
       select('hall');put(singer,hall,-.8,0,.5);put(guitarist,hall,1,0,0);singer.pose(t);guitarist.pose(t,'guitar');instrument.visible=true;
       poseCam([7-u*2,7,9],[0,1.1,-3],53);
-      if(k==='bicycles'){poseCam([4-u*3,3.5,6],[0,1,-3],53);bicycles.forEach((b,i)=>{b.position.x=-6+((u*6+i*3)%12);});}
-      if(k==='hall_guitar'||k==='guitar_crowd'){poseCam([1.9,1.8,4],[1,1.6,0],48);singer.g.visible=false;}
+      if(cycling){
+        crowd.forEach(a=>a.g.visible=false);
+        put(singer,hall,.65,-.20,-.1);singer.pose(t,'seated');singer.g.position.y=-.20;
+        put(guitarist,hall,-.65,0,-.7);guitarist.pose(t);instrument.visible=false;
+        poseCam(s.id===21?[7-u,8,10]:[8-u*1.2,8.8,11],[0,.7,-.7],53);
+        if(k==='bicycles')poseCam([7.7,3,5.5],[3.2,1.35,-.3],49);
+      }
+      if(k==='hall_guitar'&&cycling){poseCam([3.2,3.2,5.4],[0,1.35,-.5],44);}
+      if((k==='hall_guitar'&&!cycling)||k==='guitar_crowd'){poseCam([1.9,1.8,4],[1,1.6,0],48);singer.g.visible=false;}
       if(k==='guitar_balcony'||k==='balcony_close'||k==='balcony_upper'){
         put(singer,hall,0,3.6,-9.5);put(guitarist,hall,0,3.6,-9.5);const fl=k==='guitar_balcony';singer.g.visible=!fl;guitarist.g.visible=fl;
         poseCam(k==='balcony_close'?[0,5.05,-7.1]:[.3,1.4,-4],[0,5.6,-9.5],k==='balcony_close'?45:52);crowd.forEach(a=>a.g.visible=false);
@@ -861,6 +909,8 @@ export async function createStage(T, renderer, api) {
       }
     }
     if(k!=='bridge'){for(const a of [singer,guitarist])a.g.children.forEach(o=>{if(o!==a.head&&o!==instrument)o.visible=true;});}
+    seatedLegs.visible=cycling;singer.legs.forEach(l=>l.visible=!cycling);
+    if(cycling){ambient.intensity=2.45;key.color.setHex(0xffead3);fill.intensity=115;}
     renderer.render(scene,camera);finish(t);
   }
   return {render, timeline, dispose(){target.dispose();postMat.dispose();postScene.children[0].geometry.dispose();opening.dispose();singer.h.dispose();guitarist.h.dispose();proto.dispose();const disposed=new Set();scene.traverse(o=>{if(o.geometry&&!disposed.has(o.geometry)){disposed.add(o.geometry);o.geometry.dispose();}for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[]){if(!disposed.has(m)){disposed.add(m);m.map?.dispose();m.dispose();}}});}};
