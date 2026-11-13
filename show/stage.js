@@ -744,6 +744,60 @@ export async function createStage(T, renderer, api) {
     ball(a,-.16,0,0,.34,.40,.10,M(0x6d3923));ball(a,.1,.3,0,.24,.29,.10,M(0x824a2c));box(a,.14,1.1,.08,wood,.1,.95,0);box(a,.24,.28,.10,wood,.1,1.55,0);
     ball(a,-.04,.15,.10,.13,.16,.02,B(0x101313));for(let j=0;j<6;j++)tube(a,[[.06+j*.016,-.22,.12],[.06+j*.016,1.63,.12]],.003,B(0xc5bca1),2);return a;}
   const instrument=guitar(guitarist.g);
+  // Dance poses sampled on the source-video clock, mapped by each shot's existing timeline.
+  // Keep the stock head; give the two performers elbows, fingers and a hip pivot.
+  function danceRig(a){
+    const pivot=new T.Group(),limbs=new T.Group();pivot.add(limbs);pivot.position.y=.9;
+    const sleeves=a===guitarist?black:blue;
+    const hands=[];
+    for(const side of [-1,1]){
+      const upper=mesh(limbs,new T.CylinderGeometry(.10,.085,1,10),sleeves),fore=mesh(limbs,new T.CylinderGeometry(.085,.065,1,10),sleeves);
+      const hand=new T.Group();limbs.add(hand);ball(hand,0,0,0,.10,.13,.045,skin);
+      for(let j=0;j<4;j++){const finger=new T.Group();hand.add(finger);finger.position.set((j-1.5)*.052,.08,0);finger.rotation.z=(1.5-j)*.15;const len=j===0||j===3?.11:.14;rod(finger,[0,0,0],[0,len,.025],.021,skin);rod(finger,[0,len,.025],[0,len+.065,.07],.018,skin);}
+      rod(hand,[side*.07,0,0],[side*.15,.07,.04],.028,skin);
+      hands.push({side,upper,fore,hand});
+    }
+    let moved=[];
+    function reset(){for(const o of moved){a.g.add(o);o.position.y+=.9;}moved=[];pivot.removeFromParent();a.arms.forEach(x=>x.visible=true);}
+    function segment(o,p,q){const v=new T.Vector3(...p),d=new T.Vector3(...q).sub(v);o.position.copy(v).addScaledVector(d,.5);o.position.y-=.9;o.scale.y=d.length();o.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),d.normalize());}
+    function pose(wrists,elbows,lean,twist,roll=0){
+      moved=a.g.children.filter(o=>!a.legs.includes(o)&&o!==seatedLegs);for(const o of moved){pivot.add(o);o.position.y-=.9;}
+      a.g.add(pivot);a.arms.forEach(x=>x.visible=false);pivot.rotation.set(lean,twist,roll);
+      hands.forEach(({side,upper,fore,hand},i)=>{segment(upper,[side*.36,1.6,0],elbows[i]);segment(fore,elbows[i],wrists[i]);hand.position.set(wrists[i][0],wrists[i][1]-.9,wrists[i][2]);hand.rotation.set(-.30,side*.65,side*.25);});
+    }
+    return {reset,pose,hands};
+  }
+  const danceRigs=[danceRig(singer),danceRig(guitarist)];
+  const mix=(a,b,u)=>a+(b-a)*u;
+  function keyPose(keys,clock){let j=0;while(j<keys.length-2&&clock>keys[j+1][0])j++;const a=keys[j],b=keys[j+1],u=T.MathUtils.clamp((clock-a[0])/(b[0]-a[0]),0,1),e=u*u*(3-2*u);return a.slice(1).map((v,i)=>mix(v,b[i+1],e));}
+  function dance(a,ref,kind,id){
+    const rig=danceRigs[a===singer?0:1],side=a===singer?-1:1;
+    let wrists,elbows,lean=0,twist=0,roll=0;
+    if(kind==='city'&&id===5){
+      const beat=(ref-23.023)*Math.PI*2/1.05+(a===singer?.30:0),dip=(1-Math.cos(beat))*.5;
+      const reach=.78+.12*Math.sin(beat),height=1.74-.16*dip;
+      wrists=[[-.23,height,reach],[.23,height,reach]];elbows=[[-.48,1.30-.1*dip,.30],[.48,1.30-.1*dip,.30]];
+      lean=.08+.14*dip;twist=.14*Math.sin(beat*.5);a.g.position.y-=.16*dip;
+    }else if(kind==='city'){
+      const beat=(ref-67.067)*Math.PI*2/1.05;
+      wrists=[[-.33,2.48+.08*Math.sin(beat),.18],[.33,2.48-.08*Math.sin(beat),.18]];elbows=[[-.49,2.02,.20],[.49,2.02,.20]];
+      lean=-.08;roll=.06*Math.sin(beat);a.g.position.y+=.055*Math.max(0,Math.sin(beat));
+    }else if(kind.startsWith('mountains')){
+      // The second reprise repeats the first sweep and then drops out of the frame.
+      const c=ref<143.5?ref:140.432+(ref-143.518);
+      const [lift,turn,bow]=keyPose([[140.432,.5,0,0],[140.75,1,.4,0],[141.15,1,.9,0],[141.50,.6,1.5,0],[141.85,.1,1.9,.7],[142.392,0,2.1,1.1]],c);
+      wrists=[[-.25,1.0+.1*lift,.35],[.22,1.45+1.05*lift,.18]];elbows=[[-.43,1.25,.15],[.47,1.5+.55*lift,.08]];
+      twist=turn*(a===singer?1:.85);lean=bow;roll=-.10*lift;a.g.position.y-=bow*.14;
+    }else{
+      const c=ref-183.725;
+      const [lift,bow,turn]=keyPose([[0,.5,.45,-.4],[.55,1,-.2,.3],[1.05,.65,-.3,.5],[1.55,1,-.15,.2],[2.05,.15,1.15,-.15],[2.6,.7,.1,-.45],[3.1,.2,1.0,.1],[3.65,.5,.15,.4],[4.15,.15,1.15,-.2],[4.7,.2,.3,.2],[5.25,.9,-.1,-.4],[5.8,.2,.45,.1],[6.4,.7,.1,.4],[7.35,.1,.6,0]],c);
+      if(a===singer){wrists=[[-.35-.3*lift,1.1+1.3*lift,.3],[.3+.2*lift,1.1+.7*lift,.4]];elbows=[[-.55,1.3+.5*lift,.05],[.55,1.35+.3*lift,.1]];lean=bow;twist=turn;roll=.12*Math.sin(c*3);}
+      else {wrists=[[-.13,1.20+.08*Math.sin(c*22),.5],[.55,1.9,.42]];elbows=[[-.5,1.35,.1],[.45,1.55,.1]];lean=.12+.25*Math.sin(c*4);twist=-turn*.5;roll=.12*Math.sin(c*2);}
+      a.g.position.x+=.15*Math.sin(c*3+side);a.legs.forEach((l,i)=>l.rotation.x=.14*Math.sin(c*5+i*Math.PI));
+    }
+    rig.pose(wrists,elbows,lean,twist,roll);
+    if(kind==='city'&&id===5)rig.hands.forEach(({side,hand})=>hand.rotation.set(-.25,side*.85,side*.9));
+  }
   function balcony(g,y=3,z=-6){const rail=new T.Group();g.add(rail);rail.position.set(0,y,z);
     for(let i=-7;i<=7;i++){const x=i*.7;cylinder(rail,.11,.14,1.1,stone,x,.55,0);ball(rail,x,.27,0,.2,.2,.2,stone);box(rail,.42,.12,.4,edge,x,1.1,0);}
     box(rail,11,.18,.55,edge,0,1.24,0);return rail;}
@@ -850,6 +904,7 @@ export async function createStage(T, renderer, api) {
     const u=clamp((t-s.start)/(s.end-s.start),0,1),ref=s.sourceStart+u*(s.sourceEnd-s.sourceStart),k=s.kind;
     // The approved opening keeps its composition and measured edit points, retimed to MIDI.
     if(s.id<4||k==='shoes'||k==='filament') {opening.render(k==='shoes'?19.269+u*.70:k==='filament'?(s.id===74?15.55-u*4.3:11.18+u*4.4):ref);finish(t);return;}
+    danceRigs.forEach(r=>r.reset());
     singer.g.removeFromParent();guitarist.g.removeFromParent();singer.g.visible=true;guitarist.g.visible=true;
     singer.head.visible=true;guitarist.head.visible=true;for(const a of [singer,guitarist])a.head.traverse(o=>{if(o.isLineSegments2)o.visible=true;});instrument.visible=false;helmet.visible=false;toolRig.visible=false;torch.visible=false;funnel.visible=false;
     eyeBoards.forEach(o=>o.visible=k==='eyes');signBoards.forEach(o=>o.visible=k==='signs');const cycling=[21,23,24,26].includes(s.id);cycleSalon.visible=cycling;hallFurniture.visible=!cycling;bicycles.forEach(b=>{b.g.visible=cycling;if(cycling)b.animate(t);});
@@ -867,6 +922,11 @@ export async function createStage(T, renderer, api) {
       poseCam([.15*Math.sin(t),1.1,5.8],[0,1.6,0],48);ambient.intensity=2.5;
       if(k==='mountains_close')poseCam([-.7,2.2,2.4],[-.7,2.1,0],43);
       if(k==='pipe'){poseCam([.7,2.2,2.2],[.8,2.1,0],40);guitarist.arms[1].rotation.z=2.3;}
+      if(k==='city'){
+        if(s.id===5){put(guitarist,city,.45,0,.8);put(singer,city,-1.0,0,-.65);guitarist.pose(t);singer.pose(t);poseCam([.2,1.6,4.5],[.05,1.65,.35],48);}
+        else{put(guitarist,city,1.35,0,1.2);put(singer,city,-.7,0,-.55);guitarist.pose(t);singer.pose(t);poseCam([0,.6,3.4],[0,1.6,0],58);}
+      }
+      if(k.startsWith('mountains')&&k!=='mountains_empty'){put(singer,mountains,.65,0,.65);put(guitarist,mountains,-.9,0,-.45);singer.pose(t);guitarist.pose(t);poseCam(k==='mountains_close'?[.9,2.1,2.6]:[1.3,1.8,4.8],[.35,k==='mountains_close'?2.05:1.5,.35],k==='mountains_close'?43:48);}
       if(k==='mountains_empty'){singer.g.visible=false;guitarist.g.visible=false;poseCam([0,2,5],[0,2,-4],48);}
     }else if(k==='bulbs'||k==='bulb_macro'){
       select('bulbs');poseCam([k==='bulb_macro'?-.1:-4+u*8,0,k==='bulb_macro'?1.4:3.6],[k==='bulb_macro'?0:-3+u*6,0,0],42);
@@ -886,7 +946,7 @@ export async function createStage(T, renderer, api) {
       if(k.startsWith('helmet')){key.intensity=240;fill.intensity=140;helmet.visible=true;singer.head.visible=false;guitarist.g.visible=false;singer.pose(t,'hands');singer.g.position.y=-.25;helmet.position.set(0,1.9,1);poseCam([0,2.0,k==='helmet_close'?2:k==='helmet_arms'?3.2:3.3],[0,1.9,1],40);}
       if(k.includes('torch')||k==='tools'||k==='weld_close'){guitarist.g.visible=false;toolRig.visible=true;torch.visible=true;flame.scale.y=.7+.3*Math.sin(t*20);singer.pose(t,'hands');singer.g.position.y=-.25;
         poseCam(k==='torch_face'?[.3,2.1,3.1]:k==='weld_close'?[0,2.0,2.1]:[.7,1.6,2.9],k==='weld_close'?[0,1.95,1]:[0,1.3,1.5],40);}
-      if(k.startsWith('room_duo')){put(singer,room,-.9,0,.5);put(guitarist,room,1,0,0);singer.pose(t,'dance');guitarist.pose(t,'guitar');poseCam(k==='room_duo'?[1.6,1.5,4.8]:[3.4,3.5,6.7],[0,1.5,0],48);}
+      if(k.startsWith('room_duo')){put(singer,room,-1.2,0,2.6);put(guitarist,room,1,0,2.3);singer.pose(t,'dance');guitarist.pose(t,'guitar');poseCam(k==='room_duo'?[1.6,1.8,7.3]:[3.4,3.5,8.9],[0,1.4,2.4],48);}
     }else{
       select('hall');put(singer,hall,-.8,0,.5);put(guitarist,hall,1,0,0);singer.pose(t);guitarist.pose(t,'guitar');instrument.visible=true;
       poseCam([7-u*2,7,9],[0,1.1,-3],53);
@@ -909,6 +969,7 @@ export async function createStage(T, renderer, api) {
       }
     }
     if(k!=='bridge'){for(const a of [singer,guitarist])a.g.children.forEach(o=>{if(o!==a.head&&o!==instrument)o.visible=true;});}
+    if(k==='city'||['mountains','mountains_close','room_duo','room_duo_wide'].includes(k)){dance(singer,ref,k,s.id);dance(guitarist,ref,k,s.id);}
     seatedLegs.visible=cycling;singer.legs.forEach(l=>l.visible=!cycling);
     if(cycling){ambient.intensity=2.45;key.color.setHex(0xffead3);fill.intensity=115;}
     renderer.render(scene,camera);finish(t);
