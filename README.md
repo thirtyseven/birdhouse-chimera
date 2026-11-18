@@ -6,6 +6,10 @@ A fan-made recreation rendered live in three.js, using the stock Chimera anatomy
 
 Music by They Might Be Giants. The soundtrack is MIDI accompaniment plus Chimera synthesized singing. The show runs for 3:04, with corrected lyric timing and recorded articulator telemetry driving the head.
 
+## Sandwich-board procession
+
+At 2:01–2:13 and 2:18–2:21, the extras walk along the circle tangent, alternating steps and thrusting closed fists upward. Front and back boards are joined by shoulder straps. Run `bun tests/procession.test.mjs` to verify facing direction along the entire ellipse.
+
 ## Brass props correction
 
 The brass sequence at 1:24–1:33 uses two exaggerated long trumpets with sculpted face-shaped bells, including open mouths and eye sockets. The earlier tuba interpretation has been removed.
