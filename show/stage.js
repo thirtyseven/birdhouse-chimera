@@ -5,7 +5,7 @@ export function processionPose(ref,index){const angle=index/14*Math.PI*2+ref*.10
 export function protestArmsAt(audioTime){const beat=(audioTime-.3)/.571429;const thrust=Math.pow(Math.max(0,Math.cos(beat*Math.PI*2)),2);
   // Actors face +Z: arm 0 at local -X is their anatomical right arm.
   return [{thrust,x:-2-.98*thrust,z:-.18-.10*thrust,elbow:-.85+.72*thrust,scale:1.18},{thrust:0,x:.08,z:.12,elbow:-.12,scale:1}];}
-/** Full procedural shot study. Only geometry, procedural materials, and Chimera anatomy. */
+/** Full procedural shot study. Geometry, printed photographic props, and Chimera anatomy; no video. */
 export async function createStage(T, renderer, api) {
   const timeline = {
   "duration": 184,
@@ -732,16 +732,21 @@ export async function createStage(T, renderer, api) {
     const c=document.createElement('canvas');c.width=256;c.height=256;const ctx=c.getContext('2d');ctx.fillStyle='#d6d2b7';ctx.fillRect(0,0,256,256);ctx.fillStyle='#161719';ctx.textAlign='center';ctx.font='bold 44px sans-serif';text.split('\n').forEach((s,i)=>ctx.fillText(s,128,60+i*55));
     const tex=new T.CanvasTexture(c);const o=mesh(g,new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:tex}),x,y,z);return o;
   }
-  let eyePrint;
-  function eyes(g,w=.6,h=.22){
-    if(!eyePrint){const c=document.createElement('canvas');c.width=512;c.height=192;const q=c.getContext('2d');q.fillStyle='#aaa79f';q.fillRect(0,0,512,192);
-      for(let side=0;side<2;side++){const x=128+side*256;const grad=q.createRadialGradient(x,104,8,x,104,116);grad.addColorStop(0,'#d4d0c5');grad.addColorStop(1,'#77766f');q.fillStyle=grad;q.fillRect(side*256,0,256,192);
-        q.fillStyle='#dedbd1';q.beginPath();q.moveTo(x-91,108);q.quadraticCurveTo(x,31,x+91,108);q.quadraticCurveTo(x,153,x-91,108);q.fill();
-        q.fillStyle='#686961';q.beginPath();q.ellipse(x,99,29,34,0,0,Math.PI*2);q.fill();for(let j=0;j<40;j++){let a=j*Math.PI/20;q.strokeStyle=j%2?'#93948a':'#41433d';q.lineWidth=2;q.beginPath();q.moveTo(x+Math.cos(a)*14,99+Math.sin(a)*14);q.lineTo(x+Math.cos(a)*28,99+Math.sin(a)*32);q.stroke();}
-        q.fillStyle='#111511';q.beginPath();q.arc(x,100,13,0,Math.PI*2);q.fill();q.fillStyle='#e8e7df';q.beginPath();q.arc(x-8,91,5,0,Math.PI*2);q.fill();
-        q.strokeStyle='#47473e';q.lineWidth=8;q.beginPath();q.moveTo(x-91,108);q.quadraticCurveTo(x,31,x+91,108);q.stroke();q.lineWidth=14;q.beginPath();q.moveTo(x-94,54);q.quadraticCurveTo(x-10,9,x+83,47);q.stroke();}
-      eyePrint=new T.CanvasTexture(c);}
-    box(g,w,h,.025,B(0xaaa69b));mesh(g,new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map:eyePrint}),0,0,.015);
+  // William Allen White, LOC Bain Collection ggbain.37609 (public domain).
+  // Crop the original photograph through UVs: paired eyes on masks, one on boards.
+  const eyePrint=await new T.TextureLoader().loadAsync(api.base+'william-allen-white.jpg');
+  eyePrint.colorSpace=T.SRGBColorSpace;
+  function eyes(g,w=.6,h=.22,single=false){
+    const geo=new T.PlaneGeometry(w,h),uv=geo.attributes.uv;
+    const [cx,cy,cw,ch]=single?[623,601,170,230]:[538,623,350,118];
+    const angle=-.28,co=Math.cos(angle),si=Math.sin(angle);
+    for(let i=0;i<uv.count;i++){
+      const x=(uv.getX(i)-.5)*cw,y=(.5-uv.getY(i))*ch;
+      uv.setXY(i,(cx+co*x-si*y)/1340,1-(cy+si*x+co*y)/1856);
+    }
+    uv.needsUpdate=true;
+    box(g,w,h,.025,B(0xaaa69b));
+    mesh(g,geo,new T.MeshBasicMaterial({map:eyePrint}),0,0,.015);
   }
   const crowd=[];
   function dancer(i){const a=actor(false,proto.group);const plaid=M(i%2?0x773d36:0x66362b);const shirt=box(a.g,.73,.75,.48,plaid,0,1.36,0);
@@ -888,7 +893,7 @@ export async function createStage(T, renderer, api) {
   crowd.forEach((a,i)=>{
     a.protestBoards=[];
     for(const side of [-1,1]){
-      const board=new T.Group();a.g.add(board);board.position.set(0,.95,side*.37);board.rotation.y=side<0?Math.PI:0;box(board,.9,1.2,.07,black);const eye=new T.Group();board.add(eye);eye.position.z=.06;eyes(eye,1.6,.8);eye.scale.x=.48;eyeBoards.push(board);a.protestBoards.push(board);
+      const board=new T.Group();a.g.add(board);board.position.set(0,.95,side*.37);board.rotation.y=side<0?Math.PI:0;box(board,.9,1.2,.07,black);const eye=new T.Group();board.add(eye);eye.position.z=.06;eyes(eye,.76,1.02,true);eyeBoards.push(board);a.protestBoards.push(board);
       const sign=new T.Group();a.g.add(sign);sign.position.set(0,.95,side*.38);sign.rotation.y=side<0?Math.PI:0;box(sign,.95,1.3,.08,wood);plaque(sign,'STOP\nROCK\nVIDEO',.86,1.18,0,0,.05);signBoards.push(sign);a.protestBoards.push(sign);
     }
     const straps=new T.Group();a.g.add(straps);for(const x of [-.23,.23])tube(straps,[[x,1.5,.37],[x,1.76,.18],[x,1.76,-.18],[x,1.5,-.37]],.022,black,12);boardStraps.push(straps);

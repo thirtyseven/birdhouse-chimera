@@ -2,9 +2,13 @@
 
 [Play the show](https://thirtyseven.github.io/birdhouse-chimera/)
 
-A fan-made recreation rendered live in three.js, using the stock Chimera anatomy head. All visual scenes are procedural geometry; no video file is used or included.
+A fan-made recreation rendered live in three.js, using the stock Chimera anatomy head. All scenes are rendered in three.js, with photographic eye prints on the props; no video file is used or included.
 
 Music by They Might Be Giants. The soundtrack is MIDI accompaniment plus Chimera synthesized singing. The show runs for 3:04, with corrected lyric timing and recorded articulator telemetry driving the head.
+
+## William Allen White eye prints
+
+The eye masks use both eyes from a public-domain William Allen White portrait in the Library of Congress Bain Collection. Each eye sandwich-board face shows just one enlarged eye. The original photograph is bundled locally and cropped through texture UVs; source details are in `show/ASSET-CREDITS.txt`.
 
 ## Sandwich-board procession
 

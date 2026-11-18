@@ -1,0 +1,8 @@
+William Allen White photographic eye props
+
+william-allen-white.jpg: Unknown photographer, Bain Collection, Library of Congress.
+Library of Congress digital ID: ggbain.37609
+Source: https://hdl.loc.gov/loc.pnp/ggbain.37609
+Downloaded from: https://commons.wikimedia.org/wiki/File:WP_William_Allen_White.jpg
+Wikimedia Commons marks this photograph as public domain.
+The original photograph is preserved; stage.js crops its eyes with texture UVs.
