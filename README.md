@@ -8,7 +8,7 @@ Music by They Might Be Giants. The soundtrack is MIDI accompaniment plus Chimera
 
 ## Sandwich-board procession
 
-At 2:01–2:13 and 2:18–2:21, the extras walk along the circle tangent, alternating steps and thrusting closed fists upward. Front and back boards are joined by shoulder straps. Run `bun tests/procession.test.mjs` to verify facing direction along the entire ellipse.
+At 2:01–2:13 and 2:18–2:21, the extras walk along the circle tangent, alternating steps and thrusting only their right fists upward in unison. Full extension falls on every MIDI beat (571429 µs per beat, with the soundtrack’s 300 ms start offset); left arms remain down. Front and back boards are joined by shoulder straps. Run `bun tests/procession.test.mjs` to verify facing direction along the entire ellipse.
 
 ## Brass props correction
 

@@ -1,5 +1,10 @@
 // +Z is each extra's forward axis; yaw follows the ellipse tangent, not its radius.
-export function processionPose(ref,index){const angle=index/14*Math.PI*2+ref*.10;return {x:4.8*Math.cos(angle),z:-.7+4*Math.sin(angle),yaw:Math.atan2(-4.8*Math.sin(angle),4*Math.cos(angle)),stride:ref*Math.PI*2*.8+index*.47,pump:ref*Math.PI*2*.9+index*.65};}
+export function processionPose(ref,index){const angle=index/14*Math.PI*2+ref*.10;return {x:4.8*Math.cos(angle),z:-.7+4*Math.sin(angle),yaw:Math.atan2(-4.8*Math.sin(angle),4*Math.cos(angle)),stride:ref*Math.PI*2*.8+index*.47};}
+// These shots precede the MIDI ritardando. Use the file's exact 571429 µs tempo
+// and the soundtrack's 300 ms count-in, so full extension lands on each beat.
+export function protestArmsAt(audioTime){const beat=(audioTime-.3)/.571429;const thrust=Math.pow(Math.max(0,Math.cos(beat*Math.PI*2)),2);
+  // Actors face +Z: arm 0 at local -X is their anatomical right arm.
+  return [{thrust,x:-2-.98*thrust,z:-.18-.10*thrust,elbow:-.85+.72*thrust,scale:1.18},{thrust:0,x:.08,z:.12,elbow:-.12,scale:1}];}
 /** Full procedural shot study. Only geometry, procedural materials, and Chimera anatomy. */
 export async function createStage(T, renderer, api) {
   const timeline = {
@@ -889,9 +894,9 @@ export async function createStage(T, renderer, api) {
     const straps=new T.Group();a.g.add(straps);for(const x of [-.23,.23])tube(straps,[[x,1.5,.37],[x,1.76,.18],[x,1.76,-.18],[x,1.5,-.37]],.022,black,12);boardStraps.push(straps);
     a.protestFists=a.arms.map(arm=>{const elbow=arm.userData.elbow;const openHand=elbow.children.slice(1);const fist=new T.Group();elbow.add(fist);fist.position.set(0,-.38,0);box(fist,.16,.18,.13,skin,0,0,0);for(let j=0;j<4;j++)ball(fist,(j-1.5)*.042,-.075,.035,.027,.04,.055,skin);ball(fist,.075,.01,.07,.04,.065,.035,skin);return {fist,openHand};});
   });
-  function march(a,i,ref){const p=processionPose(ref,i);a.g.position.set(p.x,.018*Math.abs(Math.sin(p.stride)),p.z);a.g.rotation.set(0,p.yaw,0);a.head.rotation.y=-Math.PI/2+.035*Math.sin(p.stride);a.head.rotation.z=0;
+  function march(a,i,ref,audioTime){const p=processionPose(ref,i);a.g.position.set(p.x,.018*Math.abs(Math.sin(p.stride)),p.z);a.g.rotation.set(0,p.yaw,0);a.head.rotation.y=-Math.PI/2+.035*Math.sin(p.stride);a.head.rotation.z=0;
     a.legs.forEach((leg,j)=>leg.rotation.x=.22*Math.sin(p.stride+j*Math.PI));
-    a.arms.forEach((arm,j)=>{const thrust=Math.pow(Math.max(0,Math.sin(p.pump+j*.75)),.6);arm.scale.y=1.18;arm.rotation.set(-2.0-.98*thrust,0,(j?1:-1)*(.18+.10*thrust));arm.userData.elbow.rotation.x=-.85+.72*thrust;});
+    const gestures=protestArmsAt(audioTime);a.arms.forEach((arm,j)=>{const pose=gestures[j];arm.scale.y=pose.scale;arm.rotation.set(pose.x,0,pose.z);arm.userData.elbow.rotation.x=pose.elbow;});
     a.protestBoards.forEach(board=>board.rotation.x=.035*Math.sin(p.stride));
   }
   const room=root('room');box(room,14,.1,13,M(0x211a19),0,-.12,0);box(room,14,7,.3,M(0x071010),0,3,-5);
@@ -994,7 +999,7 @@ export async function createStage(T, renderer, api) {
     portraitBacking.visible=['torch_face','weld_close','helmet_close'].includes(k);workpiece.visible=['tools','torch_tools'].includes(k);eyeRim.visible=k==='weld_close';
     sweaterStripes.visible=k==='mirror_stripe';
     smokingPipe.visible=k==='pipe';
-    const protesting=[43,44,45,51].includes(s.id);boardStraps.forEach(o=>o.visible=protesting);crowd.forEach(a=>{a.protestFists.forEach(({fist,openHand})=>{fist.visible=protesting;openHand.forEach(o=>o.visible=!protesting);});a.arms.forEach(arm=>arm.scale.set(1,1,1));a.protestBoards.forEach(board=>board.rotation.x=0);});
+    const protesting=[43,44,45,51].includes(s.id);boardStraps.forEach(o=>o.visible=protesting);crowd.forEach(a=>{a.protestFists.forEach(({fist,openHand},j)=>{const closed=protesting&&j===0;fist.visible=closed;openHand.forEach(o=>o.visible=!closed);});a.arms.forEach(arm=>arm.scale.set(1,1,1));a.protestBoards.forEach(board=>board.rotation.x=0);});
     eyeBoards.forEach(o=>o.visible=k==='eyes'||[43,45].includes(s.id));signBoards.forEach(o=>o.visible=k==='signs');const cycling=[21,23,24,26].includes(s.id);const furnished=cycling||[43,44,45,51,71].includes(s.id);cycleSalon.visible=furnished;hallFurniture.visible=!furnished&&k!=='guitar_crowd';bicycles.forEach(b=>{b.g.visible=cycling;if(cycling)b.animate(t);});
     crowd.forEach((a,i)=>{if(a.g.parent!==hall)hall.add(a.g);a.g.visible=true;a.g.position.copy(a.home);a.pose(t+i*.07,k==='crowd'||k==='crowd_close'?'hands':'dance');a.g.position.x=a.home.x+.12*Math.sin(t*2+i);if(['crowd','crowd_close','guitar_crowd'].includes(k)){a.arms.forEach((arm,j)=>{arm.rotation.z=(j?-1:1)*(.4+.25*Math.sin(ref*3));arm.rotation.x=-1.7;arm.userData.elbow.rotation.x=-1.2;});a.head.rotation.z=.13*Math.sin(ref*4+i*.3);}});
     ambient.intensity=1.7;key.intensity=160;fill.intensity=85;rim.intensity=95;key.color.setHex(0xffead5);scene.background.setHex(0x020304);
@@ -1081,7 +1086,7 @@ export async function createStage(T, renderer, api) {
       }
       if([43,45].includes(s.id)){
         put(singer,hall,.65,-.2,-.1);singer.pose(t,'seated');singer.g.position.y=-.2;put(guitarist,hall,-2.15,-.2,-.9);guitarist.pose(t,'seated');guitarist.g.position.y=-.2;instrument.visible=false;
-        crowd.forEach((a,i)=>march(a,i,ref));
+        crowd.forEach((a,i)=>march(a,i,ref,t));
         poseCam(s.id===43?[3,4.5,3.7]:[7,7,8],[.3,1,-.7],s.id===43?44:51);
       }
       if(k==='crowd'||k==='crowd_close'||k==='eyes'||k==='signs'){
@@ -1091,7 +1096,7 @@ export async function createStage(T, renderer, api) {
         if(k==='crowd_close'){const a=crowd[2];a.g.position.set(0,0,-1.3);a.pose(t,'hands');a.head.rotation.y=-Math.PI/2+(s.id===34?.15:-.08);poseCam([.02,2.24,-.32],[0,2.23,-1.25],40);}
       }
     }
-    if(protesting)crowd.forEach((a,i)=>march(a,i,ref));
+    if(protesting)crowd.forEach((a,i)=>march(a,i,ref,t));
     if(k!=='bridge'){for(const a of [singer,guitarist])a.g.children.forEach(o=>{if(o!==a.head&&o!==instrument)o.visible=true;});}
     if(k==='torch_face')danceRigs[0].pose([[-.35,1.1,.25],[.4,2.25,.5]],[[-.5,1.3,.1],[.4,1.9,.2]],0,0);
     if(instrument.visible&&guitarist.g.visible&&!k.startsWith('room_duo')&&k!=='room_platform')danceRigs[1].pose([[-.55,1.9,.42],[.13,1.2+.05*Math.sin(ref*20),.50]],[[-.45,1.55,.1],[.5,1.35,.1]],0,0);
