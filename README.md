@@ -6,9 +6,13 @@ A fan-made recreation rendered live in three.js, using the stock Chimera anatomy
 
 Music by They Might Be Giants. The soundtrack is MIDI accompaniment plus Chimera synthesized singing. The show runs for 3:04, with corrected lyric timing and recorded articulator telemetry driving the head.
 
+## Brass props correction
+
+The brass sequence at 1:24–1:33 uses two exaggerated long trumpets with sculpted face-shaped bells, including open mouths and eye sockets. The earlier tuba interpretation has been removed.
+
 ## Full-shot fidelity pass
 
-All 75 shots were compared with the supplied source video. This pass corrects late-film shot assignments and performer identities; refines the mirror closeups, balcony/staircase framing, welding mask and tool inserts, seated poses, printed eye masks and procession; rebuilds the electric guitar, sousaphone, trumpet, light bulbs, and shoes; and adds layered scenic flats and fuller room architecture. The stock Chimera heads, MIDI accompaniment, corrected vocal timing, bicycle choreography, and dance poses are preserved.
+All 75 shots were compared with the supplied source video. This pass corrects late-film shot assignments and performer identities; refines the mirror closeups, balcony/staircase framing, welding mask and tool inserts, seated poses, printed eye masks and procession; rebuilds the electric guitar, long face-belled trumpets, light bulbs, and shoes; and adds layered scenic flats and fuller room architecture. The stock Chimera heads, MIDI accompaniment, corrected vocal timing, bicycle choreography, and dance poses are preserved.
 
 The shot inventory and source-to-show timing are in `show/shot-timeline.json`. The player versions its scene imports so browser caches do not retain a previous animation release. Checks cover every shot, desktop and phone-sized layouts, and continuous playback through seven representative sections (60 fps observed in desktop Chrome on the test machine).
 

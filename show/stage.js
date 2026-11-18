@@ -351,7 +351,7 @@ export async function createStage(T, renderer, api) {
       "sourceEnd": 92.509,
       "start": 84.08836284122502,
       "end": 87.56146544605002,
-      "kind": "tuba"
+      "kind": "face_horns"
     },
     {
       "id": 37,
@@ -367,7 +367,7 @@ export async function createStage(T, renderer, api) {
       "sourceEnd": 98.057,
       "start": 88.71846631380001,
       "end": 92.87106942825001,
-      "kind": "tuba"
+      "kind": "face_horns"
     },
     {
       "id": 39,
@@ -930,22 +930,28 @@ export async function createStage(T, renderer, api) {
   for(const side of [-1,1]){const points=[];for(let j=0;j<80;j++){const a=j/79*Math.PI*2;points.push([side*.14+Math.sin(a)*.09,.36*Math.cos(a),.01]);}tube(macroBulb,points,.018,B(0xffd895),90);}
   tube(macroBulb,[[0,-.35,0],[-.035,-.15,0],[.035,-.04,0],[-.025,.1,0],[.015,.33,0]],.015,B(0xffd895));
   // Brass and hand close-ups.
-  const brass=root('brass');const horn=new T.Group();brass.add(horn);horn.position.set(0,1.4,0);
-  const bell=mesh(horn,new T.LatheGeometry([new T.Vector2(.06,-.8),new T.Vector2(.08,-.25),new T.Vector2(.19,.05),new T.Vector2(.52,.3),new T.Vector2(.57,.34)],40),gold);bell.rotation.x=Math.PI/2;
-  torus(horn,.54,.035,gold,0,0,.34);tube(horn,[[0,0,-.8],[.3,-.4,-.9],[.6,-.3,-.5],[.3,.2,-.2]],.07,gold);
-  const brassMaterial=new T.MeshStandardMaterial({color:0xc1a66c,emissive:0x251707,emissiveIntensity:.08,roughness:.30,metalness:.35,side:T.DoubleSide});
-  horn.traverse(o=>{if(o.isMesh)o.material=brassMaterial;});
-  const trumpetRig=new T.Group();brass.add(trumpetRig);trumpetRig.position.set(0,1.98,.17);trumpetRig.rotation.x=-.28;
-  const trumpetBell=mesh(trumpetRig,new T.LatheGeometry([new T.Vector2(.025,0),new T.Vector2(.04,.45),new T.Vector2(.12,.63),new T.Vector2(.25,.72)],36),brassMaterial);trumpetBell.rotation.x=Math.PI/2;trumpetBell.position.z=.25;
-  tube(trumpetRig,[[0,0,0],[0,0,.7],[.12,-.18,.7],[.22,-.18,.14],[.07,-.12,.1],[.07,-.12,.6]],.026,brassMaterial);
-  for(let j=0;j<3;j++){cylinder(trumpetRig,.035,.035,.25,brassMaterial,.06,.03,.25+j*.11);ball(trumpetRig,.06,.17,.25+j*.11,.055,.018,.055,brassMaterial);}
-  const foregroundTrumpet=new T.Group();brass.add(foregroundTrumpet);foregroundTrumpet.position.set(-.7,1.36,1.2);foregroundTrumpet.scale.setScalar(.75);foregroundTrumpet.rotation.y=-.45;const secondTrumpet=trumpetRig.clone(true);secondTrumpet.position.set(0,0,0);foregroundTrumpet.add(secondTrumpet);
+  const brass=root('brass');
+  const brassMaterial=new T.MeshStandardMaterial({color:0xc1a66c,emissive:0x251707,emissiveIntensity:.08,roughness:.3,metalness:.35,side:T.DoubleSide});
+  // Both props are extended trumpets. Their flares terminate in sculpted brass faces.
+  function faceTrumpet(){const g=new T.Group();
+    tube(g,[[0,0,-.1],[0,0,1.52]],.027,brassMaterial,8);
+    tube(g,[[0,0,.16],[.17,-.16,.16],[.17,-.16,.61],[0,-.10,.67]],.024,brassMaterial,16);
+    for(let j=0;j<3;j++){cylinder(g,.034,.034,.23,brassMaterial,.055,.005,.25+j*.11);ball(g,.055,.14,.25+j*.11,.05,.018,.05,brassMaterial);}
+    const flare=mesh(g,new T.LatheGeometry([new T.Vector2(.027,0),new T.Vector2(.045,.18),new T.Vector2(.12,.32),new T.Vector2(.31,.43),new T.Vector2(.53,.49)],48),brassMaterial,0,0,1.46);flare.rotation.x=Math.PI/2;
+    const face=new T.Shape();face.absellipse(0,0,.53,.56,0,Math.PI*2,false,0);
+    const mouth=new T.Path();mouth.absellipse(.015,-.16,.30,.255,0,Math.PI*2,true,-.12);face.holes.push(mouth);
+    for(const side of [-1,1]){const eye=new T.Path();eye.absellipse(side*.20,.23,.10,.037,0,Math.PI*2,true,side*.30);face.holes.push(eye);}
+    mesh(g,new T.ExtrudeGeometry(face,{depth:.025,bevelEnabled:true,bevelSize:.015,bevelThickness:.012,bevelSegments:3,steps:1}),brassMaterial,0,0,1.94);
+    const rim=torus(g,.53,.026,brassMaterial,0,0,1.975);rim.scale.y=1.057;
+    const lip=torus(g,1,.07,brassMaterial,.015,-.16,1.982);lip.scale.set(.30,.255,.24);lip.rotation.z=-.12;
+    ball(g,.015,-.16,1.925,.295,.25,.018,B(0x100c08));for(const side of [-1,1]){const socket=ball(g,side*.20,.23,1.925,.105,.04,.015,B(0x100c08));socket.rotation.z=side*.30;}ball(g,0,.10,2.005,.055,.12,.065,brassMaterial);ball(g,0,.015,2.04,.07,.04,.06,brassMaterial);
+    for(const side of [-1,1]){tube(g,[[side*.08,.30,1.98],[side*.18,.34,2.005],[side*.31,.27,1.98]],.024,brassMaterial,12);ball(g,side*.34,-.01,1.99,.10,.09,.012,brassMaterial);}
+    return g;
+  }
+  const trumpetRig=faceTrumpet(),secondHorn=faceTrumpet();brass.add(trumpetRig,secondHorn);
+  const foregroundTrumpet=new T.Group();brass.add(foregroundTrumpet);const foregroundHorn=faceTrumpet();foregroundTrumpet.add(foregroundHorn);
   ball(foregroundTrumpet,-.1,-.04,.33,.17,.12,.17,skin);for(let j=0;j<3;j++)tube(foregroundTrumpet,[[-.17,.02,.22+j*.12],[-.10,.21,.22+j*.12],[.05,.22,.22+j*.12],[.08,.16,.22+j*.12]],.034,skin,12);
-  const sousa=new T.Group();brass.add(sousa);sousa.position.set(0,1.35,0);const loop=torus(sousa,.61,.095,brassMaterial);loop.scale.y=1.16;
-  tube(sousa,[[.55,0,0],[.6,.7,0],[.32,1.03,.1],[.12,1.03,.28]],.09,brassMaterial);
-  const sousaBell=mesh(sousa,new T.LatheGeometry([new T.Vector2(.08,0),new T.Vector2(.10,.25),new T.Vector2(.23,.47),new T.Vector2(.58,.65)],40),brassMaterial,0,.90,.25);sousaBell.rotation.x=Math.PI/2;
-  for(let j=0;j<3;j++)tube(sousa,[[-.2+j*.13,-.1,.12],[-.2+j*.13,-.4,.12],[.1+j*.13,-.4,.12],[.1+j*.13,.25,.12]],.035,brassMaterial);
-  const tubaPlayer=actor(false,proto.group);brass.add(tubaPlayer.g);const plaid=box(tubaPlayer.g,.73,.75,.48,M(0x7f4236),0,1.36,0);for(let j=-3;j<=3;j++){box(plaid,.018,.75,.006,white,j*.10,0,.243);box(plaid,.73,.018,.006,white,0,j*.10,.244);}
+  function holdHorn(a,h,x,z,angle=-.38,yaw=0){put(a,brass,x,0,z);a.pose(midiTime);h.position.set(x,1.98,z+.17);h.rotation.set(angle,yaw,0);danceRigs[a===singer?0:1].pose([[-.04,2.09,.49],[.16,2.03,.41]],[[-.36,1.6,.3],[.38,1.6,.25]],0,0);}
   const hands=root('hands');box(hands,5,.1,3,M(0x303344),0,-.15,0);
   const fist=new T.Group();hands.add(fist);fist.position.set(-.15,.10,0);ball(fist,.65,.10,0,.75,.16,.17,skin);ball(fist,-.05,.12,0,.23,.17,.18,skin);for(let j=0;j<4;j++)ball(fist,-.20,.10,(j-1.5)*.085,.095,.10,.046,skin);ball(fist,-.03,.23,.14,.15,.065,.07,skin);
   for(let j=0;j<3;j++)tube(fist,[[-.23,.19,(j-1)*.08],[-.27,.12,(j-1)*.08],[-.25,.05,(j-1)*.08]],.004,M(0x584738),6);
@@ -1008,10 +1014,18 @@ export async function createStage(T, renderer, api) {
     }else if(k==='bridge'){
       select('bridge');put(singer,bridge,0,0,0);singer.g.position.y=-2.1;singer.pose(t);singer.g.position.y=-2.1;singer.g.children.forEach(o=>{if(o!==singer.head)o.visible=false;});
       poseCam([0,0,3.5-u*1.6],[0,0,0],40);bridgeBulbs.forEach(o=>o.visible=false);singer.head.rotation.y=-Math.PI/2+.45*Math.sin(ref*.65);headLight(singer,.65);poseCam([0,0,2.1-u*.25],[0,0,0],40);
-    }else if(['tuba','trumpet'].includes(k)){
-      select('brass');hall.visible=k==='tuba';horn.visible=false;trumpetRig.visible=k==='trumpet';foregroundTrumpet.visible=k==='trumpet';sousa.visible=k==='tuba';tubaPlayer.g.visible=k==='tuba';
-      if(k==='tuba'){tubaPlayer.g.position.set(0,0,-.18);tubaPlayer.pose(t,'hands');sousa.rotation.z=.08*Math.sin(t*3);crowd.forEach((a,i)=>{a.g.position.set((i%5-2)*1.5,0,-2-Math.floor(i/5)*1.5);});poseCam(s.id===36?[1.2,3.3,3.5]:[2.8,4.6,4.2],[0,1.6,0],52);}
-      else{put(singer,brass,0,0,-.17);singer.pose(t,'hands');singer.arms.forEach((a,i)=>{a.rotation.z=(i?1:-1)*.65;a.rotation.x=-1.5;});danceRigs[0].pose([[-.04,1.97,.43],[.16,1.92,.37]],[[-.36,1.55,.3],[.38,1.60,.25]],0,0);poseCam([1.9,2.5,2.5],[0,1.9,.30],43);}
+    }else if(['face_horns','trumpet'].includes(k)){
+      select('brass');hall.visible=k==='face_horns';foregroundTrumpet.visible=k==='trumpet';secondHorn.visible=s.id===38;
+      if(k==='face_horns'){
+        holdHorn(guitarist,trumpetRig,-.5,0,-.40);singer.g.visible=s.id===38;
+        if(s.id===38)holdHorn(singer,secondHorn,1.05,-.65,-.32,.25);
+        crowd.forEach((a,i)=>{a.g.position.set((i%5-2)*1.5,0,-2-Math.floor(i/5)*1.5);});
+        poseCam(s.id===36?[.6,4.0,4.1]:[2.8,4.6,4.8],s.id===36?[-.5,2.45,.95]:[0,1.8,.4],s.id===36?48:52);
+      }else{
+        guitarist.g.visible=false;holdHorn(singer,trumpetRig,0,-.17,-.38);
+        foregroundTrumpet.position.set(-.7,1.36,1.2);foregroundTrumpet.scale.setScalar(.75);foregroundTrumpet.rotation.set(-.12,-.65,0);
+        poseCam([2.5,2.8,3.0],[0,2.3,.95],52);
+      }
     }else if(k==='hands'){
       select('hands');poseCam([-.3,.52,1.8],[.15,.2,0],40);fist.position.y=.1+.025*Math.sin(ref*7);ambient.intensity=.8;key.intensity=40;fill.intensity=25;
     }else if(['room_wide','room_guitar','torch_face','helmet','helmet_close','tools','weld_close','torch_tools','helmet_arms','chair','room_duo','room_duo_wide','room_platform'].includes(k)){
