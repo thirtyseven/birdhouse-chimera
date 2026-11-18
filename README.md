@@ -8,7 +8,7 @@ Music by They Might Be Giants. The soundtrack is MIDI accompaniment plus Chimera
 
 ## William Allen White eye prints
 
-The eye masks use both eyes from a public-domain William Allen White portrait in the Library of Congress Bain Collection. Each eye sandwich-board face shows just one enlarged eye. The original photograph is bundled locally and cropped through texture UVs; source details are in `show/ASSET-CREDITS.txt`.
+The eye masks use both eyes from a public-domain William Allen White portrait in the Library of Congress Bain Collection. Each sandwich board shows one enlarged eye on the front and “STOP ROCK VIDEO” on the back, consistently across all procession shots. The original photograph is bundled locally and cropped through texture UVs; source details are in `show/ASSET-CREDITS.txt`.
 
 ## Sandwich-board procession
 

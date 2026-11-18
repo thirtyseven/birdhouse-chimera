@@ -889,12 +889,18 @@ export async function createStage(T, renderer, api) {
     }});
   }
   const flansSeatedLegs=seatedLegs.clone(true);guitarist.g.add(flansSeatedLegs);
-  const eyeBoards=[],signBoards=[],boardStraps=[];
+  const eyeBoards=[],boardStraps=[];
   crowd.forEach((a,i)=>{
     a.protestBoards=[];
     for(const side of [-1,1]){
-      const board=new T.Group();a.g.add(board);board.position.set(0,.95,side*.37);board.rotation.y=side<0?Math.PI:0;box(board,.9,1.2,.07,black);const eye=new T.Group();board.add(eye);eye.position.z=.06;eyes(eye,.76,1.02,true);eyeBoards.push(board);a.protestBoards.push(board);
-      const sign=new T.Group();a.g.add(sign);sign.position.set(0,.95,side*.38);sign.rotation.y=side<0?Math.PI:0;box(sign,.95,1.3,.08,wood);plaque(sign,'STOP\nROCK\nVIDEO',.86,1.18,0,0,.05);signBoards.push(sign);a.protestBoards.push(sign);
+      const board=new T.Group();a.g.add(board);board.position.set(0,.95,side*.37);board.rotation.y=side<0?Math.PI:0;
+      box(board,.9,1.2,.07,black);
+      if(side>0){
+        const eye=new T.Group();board.add(eye);eye.position.z=.06;eyes(eye,.76,1.02,true);
+      }else{
+        plaque(board,'STOP\nROCK\nVIDEO',.76,1.02,0,0,.06);
+      }
+      eyeBoards.push(board);a.protestBoards.push(board);
     }
     const straps=new T.Group();a.g.add(straps);for(const x of [-.23,.23])tube(straps,[[x,1.5,.37],[x,1.76,.18],[x,1.76,-.18],[x,1.5,-.37]],.022,black,12);boardStraps.push(straps);
     a.protestFists=a.arms.map(arm=>{const elbow=arm.userData.elbow;const openHand=elbow.children.slice(1);const fist=new T.Group();elbow.add(fist);fist.position.set(0,-.38,0);box(fist,.16,.18,.13,skin,0,0,0);for(let j=0;j<4;j++)ball(fist,(j-1.5)*.042,-.075,.035,.027,.04,.055,skin);ball(fist,.075,.01,.07,.04,.065,.035,skin);return {fist,openHand};});
@@ -1005,7 +1011,7 @@ export async function createStage(T, renderer, api) {
     sweaterStripes.visible=k==='mirror_stripe';
     smokingPipe.visible=k==='pipe';
     const protesting=[43,44,45,51].includes(s.id);boardStraps.forEach(o=>o.visible=protesting);crowd.forEach(a=>{a.protestFists.forEach(({fist,openHand},j)=>{const closed=protesting&&j===0;fist.visible=closed;openHand.forEach(o=>o.visible=!closed);});a.arms.forEach(arm=>arm.scale.set(1,1,1));a.protestBoards.forEach(board=>board.rotation.x=0);});
-    eyeBoards.forEach(o=>o.visible=k==='eyes'||[43,45].includes(s.id));signBoards.forEach(o=>o.visible=k==='signs');const cycling=[21,23,24,26].includes(s.id);const furnished=cycling||[43,44,45,51,71].includes(s.id);cycleSalon.visible=furnished;hallFurniture.visible=!furnished&&k!=='guitar_crowd';bicycles.forEach(b=>{b.g.visible=cycling;if(cycling)b.animate(t);});
+    eyeBoards.forEach(o=>o.visible=k==='eyes'||k==='signs'||[43,45].includes(s.id));const cycling=[21,23,24,26].includes(s.id);const furnished=cycling||[43,44,45,51,71].includes(s.id);cycleSalon.visible=furnished;hallFurniture.visible=!furnished&&k!=='guitar_crowd';bicycles.forEach(b=>{b.g.visible=cycling;if(cycling)b.animate(t);});
     crowd.forEach((a,i)=>{if(a.g.parent!==hall)hall.add(a.g);a.g.visible=true;a.g.position.copy(a.home);a.pose(t+i*.07,k==='crowd'||k==='crowd_close'?'hands':'dance');a.g.position.x=a.home.x+.12*Math.sin(t*2+i);if(['crowd','crowd_close','guitar_crowd'].includes(k)){a.arms.forEach((arm,j)=>{arm.rotation.z=(j?-1:1)*(.4+.25*Math.sin(ref*3));arm.rotation.x=-1.7;arm.userData.elbow.rotation.x=-1.2;});a.head.rotation.z=.13*Math.sin(ref*4+i*.3);}});
     ambient.intensity=1.7;key.intensity=160;fill.intensity=85;rim.intensity=95;key.color.setHex(0xffead5);scene.background.setHex(0x020304);
     const pulse=Math.sin(t*105/60*Math.PI*2);
